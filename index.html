@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <title>Video</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      background: #000;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .player {
+      position: relative;
+      width: min(100vw, 177.7778vh);
+      aspect-ratio: 16 / 9;
+      max-height: 100vh;
+      background: #000;
+    }
+    video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+    }
+    .start-overlay {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      background: rgba(0, 0, 0, .45);
+    }
+    .start-overlay.visible { display: flex; }
+    .start-button {
+      padding: .9rem 1.25rem;
+      border: 1px solid rgba(255,255,255,.85);
+      border-radius: 999px;
+      color: #fff;
+      background: rgba(20,20,20,.9);
+      font: inherit;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <main class="player" aria-label="動画プレーヤー">
+    <video id="video" autoplay loop playsinline preload="auto">
+      <source src="./Liberation%20-%20trailer%203%204K%20H264.mp4" type="video/mp4">
+      お使いのブラウザーは動画再生に対応していません。
+    </video>
+    <div class="start-overlay" id="startOverlay">
+      <button class="start-button" id="startButton" type="button">▶</button>
+    </div>
+  </main>
+  <script>
+    const video = document.getElementById('video');
+    const overlay = document.getElementById('startOverlay');
+    const startButton = document.getElementById('startButton');
+
+    // 音声ありの自動再生を試みます。ブラウザーに拒否された場合は、
+    // ユーザー操作で音声付き再生を開始できるボタンを表示します。
+    video.muted = false;
+    video.play().then(() => {
+      overlay.classList.remove('visible');
+    }).catch(() => {
+      overlay.classList.add('visible');
+    });
+
+    startButton.addEventListener('click', () => {
+      video.muted = false;
+      video.play().then(() => {
+        overlay.classList.remove('visible');
+      }).catch(() => {
+        overlay.classList.add('visible');
+      });
+    });
+
+    video.addEventListener('playing', () => overlay.classList.remove('visible'));
+  </script>
+</body>
+</html>
